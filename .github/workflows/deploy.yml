@@ -15,9 +15,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: gitleaks
+      - name: set up gitleaks for the runner
         uses: gitleaks/gitleaks-action@v2
+
+      - name: Run gitleaks
+        id: gitleaks
         run: gitleaks detect --verbose --source . -f json -r gitleaks.json
+        
 
     #   - name: Install dependencies
     #     run: |
