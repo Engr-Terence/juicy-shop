@@ -1,3 +1,24 @@
 name: Juicy Shop Workflow
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
+
+jobs:
+  test:
+    name: "SAST Test"  
+    runs-on: ubuntu-latest
+    default:
+      run:
+        shell: bash
+        working-directory: ./juice-shop
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+    #   - name: Set up Python
+    #     uses: actions/setup-python@v2
+    #     with:
+    #       python-version: '3.x'
+
+    #   - name: Install dependencies
+    #     run: |
