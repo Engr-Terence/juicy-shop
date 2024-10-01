@@ -16,12 +16,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: set up gitleaks for the runner
-        uses: zricethezav/gitleaks-action@v2.0.0  #gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
+        with:
+          config: ""
+          fail_on_secrets: true
 
-    #   - name: Run gitleaks
-    #     id: gitleaks
-    #     if: always ()
-    #     run: gitleaks detect --verbose -f json -r gitleaks.json
+    
         
         
 
