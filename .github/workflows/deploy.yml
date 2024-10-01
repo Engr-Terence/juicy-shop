@@ -20,7 +20,9 @@ jobs:
 
       - name: Run gitleaks
         id: gitleaks
+        if: always ()
         run: gitleaks detect --verbose --source . -f json -r gitleaks.json
+        
         
 
     #   - name: Install dependencies
