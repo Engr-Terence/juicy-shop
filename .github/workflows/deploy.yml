@@ -1,5 +1,5 @@
 name: Juicy Shop Workflow
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: ${{ github.actor }} is running some SAST out on GitHub Actions 🚀
 on: [push]
 
 jobs:
@@ -19,8 +19,10 @@ jobs:
       - name: Cache yarn dependencies
         uses: actions/cache@v3
         with:
-         path: 
-          node_modules  # Cache node_modules directory
+         path: |
+          node_modules
+          yarn.lock
+          .yarn
          key: yarn-cache-${{ hashFiles('yarn.lock') }}  # Cache key based on yarn.lock
          restore-keys: |
            yarn-cache-
@@ -30,9 +32,9 @@ jobs:
         run: |
           if [ ! -d "node_modules" ]; then
             echo "node_modules not found, installing dependencies..."
-             yarn install
+            yarn install
           else
-             echo "Using cached node_modules"
+            echo "Using cached node_modules"
           fi
    
      # Run tests using cached dependencies
