@@ -9,7 +9,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./juice-shop
+        # working-directory: ./juice-shop
 
     steps:
       - name: Checkout repository
