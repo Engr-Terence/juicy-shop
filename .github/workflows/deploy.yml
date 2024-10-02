@@ -81,3 +81,6 @@ jobs:
           name: njsscan-results
           path: njsscan-output.json
 
+      - name: view test results for njsscan
+        run: jq . njsscan-output.json
+
