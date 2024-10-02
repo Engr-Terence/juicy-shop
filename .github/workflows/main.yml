@@ -135,6 +135,8 @@ jobs:
         with:
           name: retire.json
           path: retire.json
+      - name: view test results for njsscan
+        run: jq . njsscan-output.json
 
   # Upload all reports after testing
 #   upload_reports:
