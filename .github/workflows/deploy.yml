@@ -76,14 +76,8 @@ jobs:
   
       - name: Upload NJSSCAN Results
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: njsscan-results
           path: njsscan-output.json
 
-    
-        
-        
-
-    #   - name: Install dependencies
-    #     run: |
