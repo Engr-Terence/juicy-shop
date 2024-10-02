@@ -72,7 +72,7 @@ jobs:
             pip install njsscan
   
       - name: Run NJSSCAN
-        run: njsscan ./src --output-format json --severity-threshold MEDIUM
+        run:  njsscan ./src --json -o njsscan-output.json -w
   
       - name: Upload NJSSCAN Results
         if: always()
