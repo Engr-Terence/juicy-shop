@@ -9,8 +9,8 @@ on:
 env:
   IMAGE_NAME: engrenzo/juicy-shop-app
   IMAGE_TAG: juicy-shop-app-1.1
-  DOCKER_USER: ${{ secrets.DOCKER_USER }}
-  DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+#   DOCKER_USER: ${{ secrets.DOCKER_USER }}
+#   DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
 
 jobs:
   # Cache dependencies with Yarn
