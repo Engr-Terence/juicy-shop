@@ -110,6 +110,7 @@ jobs:
   # Run Retire.js security scan
   retire:
     runs-on: ubuntu-latest
+    needs: create_cache
     steps:
       - uses: actions/checkout@v3
       - name: Set up Node.js
@@ -126,12 +127,12 @@ jobs:
       - name: Install Retire.js
         run: npm install -g retire
       - name: Run Retire.js
-        run: retire --path ./node_modules --outputformat json --outputpath /tmp/retire.json --verbose
+        run: retire --path ./node_modules --outputformat json --outputpath ./retire.json --verbose
       - name: Upload Retire.js report
         uses: actions/upload-artifact@v3
         with:
           name: retire.json
-          path: /tmp/retire.json
+          path: ./retire.json
 
   # Upload all reports after testing
 #   upload_reports:
