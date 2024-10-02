@@ -140,7 +140,9 @@ jobs:
           path: retire.json
 
       - name: Install jq
-        run: apt-get install jq
+        run: |
+          apt-get update
+          apt-get install jq
       - name: view test results for njsscan
         run: jq . njsscan-output.json
 
