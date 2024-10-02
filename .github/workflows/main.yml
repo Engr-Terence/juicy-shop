@@ -53,6 +53,8 @@ jobs:
             .yarn
 
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
       - name: Install dependencies
         run: yarn install
       - name: Run tests
@@ -129,6 +131,8 @@ jobs:
             .yarn
 
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
       - name: Install Retire.js
         run: npm install -g retire
       - name: Run Retire.js
