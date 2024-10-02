@@ -161,6 +161,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [gitleaks, njsscan, semgrep, retire]
     steps:
+      - name: Create reports directory
+        run: mkdir -p ./reports
+        
       - name: Download Gitleaks report
         uses: actions/download-artifact@v3
         with:
