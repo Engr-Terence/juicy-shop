@@ -1,0 +1,161 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  IMAGE_NAME: engrenzo/juicy-shop-app
+  IMAGE_TAG: juicy-shop-app-1.0
+  DOCKER_USER: ${{ secrets.DOCKER_USER }}
+  DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+
+jobs:
+  # Cache dependencies with Yarn
+  create_cache:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: yarn install
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules/
+            .yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+  # Run tests with Yarn
+  yarn_test:
+    runs-on: ubuntu-latest
+    needs: create_cache
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Restore Yarn cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules/
+            .yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+      - name: Install dependencies
+        run: yarn install
+      - name: Run tests
+        run: yarn test
+
+  # Run Gitleaks security scan
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          args: "detect --verbose --source . -f json -r gitleaks.json"
+      - name: Upload Gitleaks report
+        uses: actions/upload-artifact@v3
+        with:
+          name: gitleaks.json
+          path: gitleaks.json
+
+  # Run NJSSCAN security scan
+  njsscan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - name: Install njsscan
+        run: pip install njsscan
+      - name: Run njsscan
+        run: njsscan --exit-warning . --sarif -o njsscan.sarif
+      - name: Upload NJSSCAN report
+        uses: actions/upload-artifact@v3
+        with:
+          name: njsscan.sarif
+          path: njsscan.sarif
+
+  # Run Semgrep
+  semgrep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Semgrep
+        run: docker run --rm -v ${{ github.workspace }}:/src returntocorp/semgrep semgrep ci --json --output semgrep.json
+      - name: Upload Semgrep report
+        uses: actions/upload-artifact@v3
+        with:
+          name: semgrep.json
+          path: semgrep.json
+
+  # Run Retire.js security scan
+  retire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Restore Yarn cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules/
+            .yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+      - name: Install Retire.js
+        run: npm install -g retire
+      - name: Run Retire.js
+        run: retire --path . --outputformat json --outputpath retire.json
+      - name: Upload Retire.js report
+        uses: actions/upload-artifact@v3
+        with:
+          name: retire.json
+          path: retire.json
+
+  # Upload all reports after testing
+  upload_reports:
+    runs-on: ubuntu-latest
+    needs: [gitleaks, njsscan, semgrep, retire]
+    steps:
+      - name: Upload all reports
+        run: |
+          python3 upload-reports.py gitleaks.json
+          python3 upload-reports.py njsscan.sarif
+          python3 upload-reports.py semgrep.json
+          python3 upload-reports.py retire.json
+
+  # Build Docker image and push to DockerHub
+  build_image:
+    runs-on: ubuntu-latest
+    needs: [yarn_test]
+    services:
+      docker:
+        image: docker:24-dind
+        options: --privileged
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to DockerHub
+        run: echo ${{ secrets.DOCKER_PASS }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+      - name: Build and push Docker image
+        run: |
+          docker build -t $IMAGE_NAME:$IMAGE_TAG .
+          docker push $IMAGE_NAME:$IMAGE_TAG

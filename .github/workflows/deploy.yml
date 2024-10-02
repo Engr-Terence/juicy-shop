@@ -1,86 +1,86 @@
-name: Juicy Shop Workflow
-run-name: ${{ github.actor }} is running some SAST out on GitHub Actions 🚀
-on: [push]
+# name: Juicy Shop Workflow
+# run-name: ${{ github.actor }} is running some SAST out on GitHub Actions 🚀
+# on: [push]
 
-jobs:
-  test:
-    name: "SAST Test"  
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        # working-directory: ./juice-shop
+# jobs:
+#   test:
+#     name: "SAST Test"  
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         shell: bash
+#         # working-directory: ./juice-shop
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
 
-# # Cache yarn dependencies
-#       - name: Cache yarn dependencies
-#         uses: actions/cache@v3
+# # # Cache yarn dependencies
+# #       - name: Cache yarn dependencies
+# #         uses: actions/cache@v3
+# #         with:
+# #          path: |
+# #           node_modules
+# #           yarn.lock
+# #           .yarn
+# #          key: yarn-cache-${{ hashFiles('yarn.lock') }}  # Cache key based on yarn.lock
+# #          restore-keys: |
+# #            yarn-cache-
+
+# #      # Check if node_modules exist after restoring cache
+# #       - name: Verify cached dependencies
+# #         run: |
+# #           if [ ! -d "node_modules" ]; then
+# #             echo "node_modules not found, installing dependencies..."
+# #             yarn install
+# #           else
+# #             echo "Using cached node_modules"
+# #           fi
+#       - name: Set up Node.js 18
+#         uses: actions/setup-node@v3
 #         with:
-#          path: |
-#           node_modules
-#           yarn.lock
-#           .yarn
-#          key: yarn-cache-${{ hashFiles('yarn.lock') }}  # Cache key based on yarn.lock
-#          restore-keys: |
-#            yarn-cache-
+#           node-version: 18
+#           cache: 'yarn'
 
-#      # Check if node_modules exist after restoring cache
-#       - name: Verify cached dependencies
+#     # Install dependencies
+#       - name: Install dependencies
 #         run: |
-#           if [ ! -d "node_modules" ]; then
-#             echo "node_modules not found, installing dependencies..."
-#             yarn install
-#           else
-#             echo "Using cached node_modules"
-#           fi
-      - name: Set up Node.js 18
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'yarn'
+#           yarn cache clean
+#           yarn install
 
-    # Install dependencies
-      - name: Install dependencies
-        run: |
-          yarn cache clean
-          yarn install
-
-     # Run tests using cached dependencies
-      - name: Run yarn tests
-        run: |
-          yarn test
-        continue-on-error: true  # Past if tests fail
+#      # Run tests using cached dependencies
+#       - name: Run yarn tests
+#         run: |
+#           yarn test
+#         continue-on-error: true  # Past if tests fail
 
 
-      - name: set up gitleaks for the runner
-        uses: gitleaks/gitleaks-action@v2
-        continue-on-error: true
-        with:
-          config: ""
-          fail_on_secrets: true
+#       - name: set up gitleaks for the runner
+#         uses: gitleaks/gitleaks-action@v2
+#         continue-on-error: true
+#         with:
+#           config: ""
+#           fail_on_secrets: true
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-         python-version: '3.x'
+#       - name: Set up Python
+#         uses: actions/setup-python@v2
+#         with:
+#          python-version: '3.x'
   
-      - name: Install NJSSCAN
-        run: |
-            pip install njsscan
+#       - name: Install NJSSCAN
+#         run: |
+#             pip install njsscan
   
-      - name: Run NJSSCAN
-        run:  njsscan ./src --json -o njsscan-output.json -w
+#       - name: Run NJSSCAN
+#         run:  njsscan ./src --json -o njsscan-output.json -w
   
-      - name: Upload NJSSCAN Results
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: njsscan-results
-          path: njsscan-output.json
+#       - name: Upload NJSSCAN Results
+#         if: always()
+#         uses: actions/upload-artifact@v3
+#         with:
+#           name: njsscan-results
+#           path: njsscan-output.json
 
-      - name: view test results for njsscan
-        run: jq . njsscan-output.json
+#       - name: view test results for njsscan
+#         run: jq . njsscan-output.json
 
