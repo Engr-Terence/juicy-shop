@@ -15,28 +15,37 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-# Cache yarn dependencies
-      - name: Cache yarn dependencies
-        uses: actions/cache@v3
-        with:
-         path: |
-          node_modules
-          yarn.lock
-          .yarn
-         key: yarn-cache-${{ hashFiles('yarn.lock') }}  # Cache key based on yarn.lock
-         restore-keys: |
-           yarn-cache-
+# # Cache yarn dependencies
+#       - name: Cache yarn dependencies
+#         uses: actions/cache@v3
+#         with:
+#          path: |
+#           node_modules
+#           yarn.lock
+#           .yarn
+#          key: yarn-cache-${{ hashFiles('yarn.lock') }}  # Cache key based on yarn.lock
+#          restore-keys: |
+#            yarn-cache-
 
-     # Check if node_modules exist after restoring cache
-      - name: Verify cached dependencies
-        run: |
-          if [ ! -d "node_modules" ]; then
-            echo "node_modules not found, installing dependencies..."
-            yarn install
-          else
-            echo "Using cached node_modules"
-          fi
-   
+#      # Check if node_modules exist after restoring cache
+#       - name: Verify cached dependencies
+#         run: |
+#           if [ ! -d "node_modules" ]; then
+#             echo "node_modules not found, installing dependencies..."
+#             yarn install
+#           else
+#             echo "Using cached node_modules"
+#           fi
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
+
+    # Install dependencies
+      - name: Install dependencies
+        run: yarn install
+
      # Run tests using cached dependencies
       - name: Run yarn tests
         run: |
