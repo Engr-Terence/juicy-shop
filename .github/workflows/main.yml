@@ -116,7 +116,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
         image: node:18-bullseye
-    needs: yarn_test
+    needs: create_cache
     steps:
       - uses: actions/checkout@v3
       - name: Set up Node.js
