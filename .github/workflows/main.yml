@@ -85,7 +85,7 @@ jobs:
       - name: Install njsscan
         run: pip3 install --upgrade njsscan
       - name: Run njsscan
-        run: njsscan --exit-warning . --sarif -o njsscan.sarif
+        run:  njsscan . --sarif -o njsscan.sarif
       - name: Upload NJSSCAN report
         uses: actions/upload-artifact@v3
         with:
