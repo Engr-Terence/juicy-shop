@@ -144,7 +144,7 @@ jobs:
           apt-get update
           apt-get install -y jq
       - name: view test results for njsscan
-        run: jq . njsscan-output.json
+        run: jq . retire.json
 
   # Upload all reports after testing
 #   upload_reports:
