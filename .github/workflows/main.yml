@@ -126,7 +126,7 @@ jobs:
       - name: Install Retire.js
         run: npm install -g retire
       - name: Run Retire.js
-        run: retire --path . --outputformat json --outputpath /tmp/retire.json --verbose
+        run: retire --path . --outputformat json --outputpath /tmp/retire.json --no-spinner --verbose
       - name: Upload Retire.js report
         uses: actions/upload-artifact@v3
         with:
