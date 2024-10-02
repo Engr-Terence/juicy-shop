@@ -129,10 +129,14 @@ jobs:
           path: |
             node_modules/
             .yarn
-
+            
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        run: yarn install --network-timeout 60000 --registry=https://registry.npmjs.org
+      - name: List Installed Dependencies
+        run: ls -R ./node_modules
       - name: Install Retire.js
         run: npm install -g retire
       - name: Run Retire.js
