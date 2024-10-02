@@ -30,7 +30,7 @@ jobs:
           path: |
             node_modules/
             .yarn
-            yarn.lock
+
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
@@ -51,7 +51,7 @@ jobs:
           path: |
             node_modules/
             .yarn
-            yarn.lock
+
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
       - name: Install dependencies
         run: yarn install
@@ -127,12 +127,12 @@ jobs:
           path: |
             node_modules/
             .yarn
-            yarn.lock
+
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
       - name: Install Retire.js
         run: npm install -g retire
       - name: Run Retire.js
-        run: retire --path node_modules --outputformat json --outputpath retire.json --verbose
+        run: retire --path . --outputformat json --outputpath retire.json --verbose
       - name: Upload Retire.js report
         uses: actions/upload-artifact@v3
         with:
