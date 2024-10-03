@@ -71,7 +71,7 @@ jobs:
         env:
           GITLEAKS_ENABLE_UPLOAD_ARTIFACT: false
         with:
-          args: "detect --verbose --source . -f json -r gitleaks.json"
+          args: "detect --redact -v --exit-code=2 --report-format=json --report-path=gitleaks.json --log-level=debug"
       - name: List files
         run: find . -type f
       - name: Rename Gitleaks report to gitleaks.json
