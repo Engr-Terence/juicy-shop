@@ -201,51 +201,56 @@ jobs:
         with:
           name: njsscan.sarif
           path: ./reports
-  
-      - name: Download Semgrep report
-        uses: actions/download-artifact@v3
-        with:
-          name: semgrep.json
-          path: ./reports
-  
-      - name: Download Retire.js report
-        uses: actions/download-artifact@v3
-        with:
-          name: retire.json
-          path: ./reports
 
-      # Install Python dependencies
-      - name: Install Python dependencies
-        run: pip install requests
-      - name: Make the Python script executable
-        run: chmod +x ./upload-results.py
-      # Now, process and upload these reports using Python script
-      - name: Process and Upload Reports
-        run: |
-          python3 upload-results.py ./reports/gitleaks.json
-          python3 upload-results.py ./reports/njsscan.sarif
-          python3 upload-results.py ./reports/semgrep.json
-          python3 upload-results.py ./reports/retire.json  
-          echo "Results Uploaded Successfully!"
-          
-          
-          
-# Build Docker image and push to DockerHub
+      - name: Check working directory
+        run: pwd
+      - name: List all files
+        run: ls -R
+  
+#       - name: Download Semgrep report
+#         uses: actions/download-artifact@v3
+#         with:
+#           name: semgrep.json
+#           path: ./reports
+  
+#       - name: Download Retire.js report
+#         uses: actions/download-artifact@v3
+#         with:
+#           name: retire.json
+#           path: ./reports
 
-  build_image:
-    runs-on: ubuntu-latest
-    needs: yarn_test
-    services:
-      docker:
-        image: docker:24-dind
-        options: --privileged
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Log in to DockerHub
-        run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
-      - name: Build and push Docker image
-        run: |
-          docker build -t ${{env.IMAGE_NAME}}:${{env.IMAGE_TAG}} .
-          docker push ${{env.IMAGE_NAME}}:${{env.IMAGE_TAG}}
+#       # Install Python dependencies
+#       - name: Install Python dependencies
+#         run: pip install requests
+#       - name: Make the Python script executable
+#         run: chmod +x ./upload-results.py
+#       # Now, process and upload these reports using Python script
+#       - name: Process and Upload Reports
+#         run: |
+#           python3 upload-results.py ./reports/gitleaks.json
+#           python3 upload-results.py ./reports/njsscan.sarif
+#           python3 upload-results.py ./reports/semgrep.json
+#           python3 upload-results.py ./reports/retire.json  
+#           echo "Results Uploaded Successfully!"
+          
+          
+          
+# # Build Docker image and push to DockerHub
+
+#   build_image:
+#     runs-on: ubuntu-latest
+#     needs: yarn_test
+#     services:
+#       docker:
+#         image: docker:24-dind
+#         options: --privileged
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v3
+#       - name: Log in to DockerHub
+#         run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+#       - name: Build and push Docker image
+#         run: |
+#           docker build -t ${{env.IMAGE_NAME}}:${{env.IMAGE_TAG}} .
+#           docker push ${{env.IMAGE_NAME}}:${{env.IMAGE_TAG}}
