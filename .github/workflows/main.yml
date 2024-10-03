@@ -70,9 +70,10 @@ jobs:
         continue-on-error: true
         with:
           args: "detect --verbose --source . -f json -r gitleaks.json"
-
+      - name: List files
+        run: ls -la
       - name: Rename Gitleaks report to gitleaks.json
-        run: mv gitleaks-results.sarif gitleaks.json
+        run: mv gitleaks-results.sarif gitleaks.json || echo "file already exist"
       - name: Upload Gitleaks report
         uses: actions/upload-artifact@v3
         with:
