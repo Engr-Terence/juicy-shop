@@ -102,6 +102,11 @@ jobs:
         name: gitleaks.json
         path: gitleaks.json
 
+    - name: Check working directory
+      run: pwd
+    - name: List all files
+      run: ls -R
+
   # Run NJSSCAN security scan
   njsscan:
     runs-on: ubuntu-latest
