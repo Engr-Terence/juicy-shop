@@ -15,7 +15,7 @@ elif file_name == 'retire.json':
 
 
 headers = {
-    'Authorization': 'Token 4ae385495af99fe3b5b02bf0baec4f7b89f6683d'
+    'Authorization': 'Token e68188729db021e20705979be2de5d3b4f82b94b'
 }
 
 url = 'https://demo.defectdojo.org/api/v2/import-scan/'
