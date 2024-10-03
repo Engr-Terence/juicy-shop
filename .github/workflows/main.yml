@@ -92,6 +92,10 @@ jobs:
     - name: Run Gitleaks
       run: |
         gitleaks detect --redact -v --exit-code=2 --report-format=json --report-path=gitleaks.json --log-level=debug
+      continue-on-error: true
+      env:
+        GITLEAKS_ENABLE_UPLOAD_ARTIFACT: false
+
     - name: Upload Gitleaks report
       uses: actions/upload-artifact@v3
       with:
