@@ -70,6 +70,9 @@ jobs:
         continue-on-error: true
         with:
           args: "detect --verbose --source . -f json -r gitleaks.json"
+
+      - name: Rename Gitleaks report to gitleaks.json
+        run: mv gitleaks-results.sarif gitleaks.json
       - name: Upload Gitleaks report
         uses: actions/upload-artifact@v3
         with:
@@ -163,7 +166,7 @@ jobs:
     steps:
       - name: Create reports directory
         run: mkdir -p ./reports
-        
+
       - name: Download Gitleaks report
         uses: actions/download-artifact@v3
         with:
