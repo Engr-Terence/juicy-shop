@@ -217,10 +217,10 @@ jobs:
       # Now, process and upload these reports using Python script
       - name: Process and Upload Reports
         run: |
-          python3 juice-shop/upload-reports.py ./reports/gitleaks.json
-          python3 juice-shop/upload-reports.py ./reports/njsscan.sarif
-          python3 juice-shop/upload-reports.py ./reports/semgrep.json
-          python3 juice-shop/upload-reports.py ./reports/retire.json  
+          python3 juice-shop/upload-results.py ./reports/gitleaks.json
+          python3 juice-shop/upload-results.py ./reports/njsscan.sarif
+          python3 juice-shop/upload-results.py ./reports/semgrep.json
+          python3 juice-shop/upload-results.py ./reports/retire.json  
           echo "Reports uploaded successfully!"
           
           
