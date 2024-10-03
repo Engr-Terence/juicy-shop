@@ -217,7 +217,8 @@ jobs:
       # Install Python dependencies
       - name: Install Python dependencies
         run: pip install requests
-  
+      - name: Make the Python script executable
+        run: chmod +x ./upload-results.py
       # Now, process and upload these reports using Python script
       - name: Process and Upload Reports
         run: |
